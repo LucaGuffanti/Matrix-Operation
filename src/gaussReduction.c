@@ -23,9 +23,18 @@ matrix_t* sum_rows(matrix_t* m1, int row1, int row2){
 matrix_t* order_rows(matrix_t* m1, int refCol){
     int i;
     int j;
-    int rows, cols;
+    int foundNonZero;
+    int rows;
 
     rows = m1->rows;
-    cols = m1->cols;
     
+    for(i = 0, foundNonZero = 0; i < rows && foundNonZero; i++){
+        if(m1->m[i][refCol] != 0){
+            foundNonZero = 1;
+            if(i != 0){
+                swap_rows(m1, i, 0);
+            }
+        }
+    }
+    return m1;
 }
