@@ -4,9 +4,8 @@
 #include "matrixUtils.h"
 
 matrix_t* multiply_row(matrix_t*, int, float);
-matrix_t* sum_rows(matrix_t*, int, int);
-matrix_t* order_rows(matrix_t*, int);
-matrix_t* gauss_reduction(matrix_t*);
+matrix_t* sum_rows(matrix_t*, int, int, int);
+matrix_t* order_rows(matrix_t*, int, int);
 matrix_t* swap_rows(matrix_t*, int, int);
-matrix_t* start_reduction(matrix_t*);
+matrix_t* reduce_ith(matrix_t*, int, int);
 #endif
