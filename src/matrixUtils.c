@@ -135,4 +135,3 @@ void print_matrix(matrix_t* mat){
 void print_message(const char* msg){
     puts(msg);
 }
-
