@@ -10,6 +10,6 @@ struct cursor {
 int setCursorPosition(struct cursor *, int *, int, int, int, int);
 void addToInputBuffer(char [], int , char , int );
 void createEntriesBuffer(int [], char [], int , int );
-void runInterface(int*);
+void runInterface(int*, char *, int, int, int);
 
 #endif

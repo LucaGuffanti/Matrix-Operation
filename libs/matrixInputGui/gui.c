@@ -10,6 +10,7 @@
 #define EMPTY_INPUT_CHAR ' '
 #define CURSOR_CHAR '_'
 
+#define DEBUG_XPOS_WINDOWS  80
 
 struct cursor {
     int x;
@@ -28,7 +29,7 @@ int setCursorPosition(struct cursor *cpos, int *relativePos, int cell_max_visibl
     else if(*relativePos <n*m*cell_max_visible_digits){
         int cellNumber = *relativePos/cell_max_visible_digits;
         int positionInCell = (*relativePos)%cell_max_visible_digits;
-	    printf_tb(40, 0, TB_WHITE, TB_DEFAULT, "%d %d", cellNumber, positionInCell);
+	    printf_tb(DEBUG_XPOS_WINDOWS, 0, TB_WHITE, TB_DEFAULT, "%d %d", cellNumber, positionInCell);
 
 
         // Matrix cell indexes
@@ -40,12 +41,14 @@ int setCursorPosition(struct cursor *cpos, int *relativePos, int cell_max_visibl
 
         cpos->x += positionInCell;
 
-        printf_tb(40, 3, TB_WHITE, TB_DEFAULT, "%d %d", entry_X, entry_Y);
-        printf_tb(40, 5, TB_WHITE, TB_DEFAULT, "%d %d", cpos->x, cpos->y);
+        printf_tb(DEBUG_XPOS_WINDOWS, 3, TB_WHITE, TB_DEFAULT, "%d %d", entry_X, entry_Y);
+        
+        printf_tb(DEBUG_XPOS_WINDOWS, 5, TB_WHITE, TB_DEFAULT, "                    ");
+        printf_tb(DEBUG_XPOS_WINDOWS, 5, TB_WHITE, TB_DEFAULT, "%d %d", cpos->x, cpos->y);
 
-        printf_tb(40, 7, TB_WHITE, TB_DEFAULT, "                    ", *relativePos);
-        printf_tb(40, 7, TB_WHITE, TB_DEFAULT, "INPUT BUFFER POS: %d", *relativePos);
-
+        printf_tb(DEBUG_XPOS_WINDOWS, 7, TB_WHITE, TB_DEFAULT, "                    ", *relativePos);
+        printf_tb(DEBUG_XPOS_WINDOWS, 7, TB_WHITE, TB_DEFAULT, "INPUT BUFFER POS: %d", *relativePos);
+        
     }
     else{
         // End of matrix, set back to first input cell
@@ -102,7 +105,12 @@ void createEntriesBuffer(int entriesBuffer[], char inputBuffer[], int lenInput, 
 
 }
 
-void runInterface(int *entriesBuffer){
+void writeHeaderMessage(char *message, int x, int y){
+    printf_tb(x, y, TB_WHITE, TB_DEFAULT, "%s", message);
+}
+
+
+void runInterface(int *entriesBuffer, char *message, int n, int m, int cell_max_visible_digits){
     
     struct cursor cpos;
 
@@ -118,15 +126,7 @@ void runInterface(int *entriesBuffer){
     tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
     // ------------------------------------------------
 
-// MATRIX PROPS ----------------
-    
-    // Cardinality
-    int n=2, m=2;
-    
-    // Max number of visible digits for every "cell" in matrix
-    int cell_max_visible_digits = 4;
 
-//------------------------------
 
 // LIBRARY VARIABLES ------------
 
@@ -159,6 +159,8 @@ void runInterface(int *entriesBuffer){
     setCursorPosition(&cpos, &inputBuffer_pos, cell_max_visible_digits, margin, n, m);
     tb_change_cell(cpos.x, cpos.y, CURSOR_CHAR, TB_WHITE, TB_DEFAULT);
 
+    writeHeaderMessage(message, 0,0);
+    tb_present();
     // Wait an event to occour ( a key pressed )
     while(tb_poll_event(&ev)){
         
@@ -255,8 +257,9 @@ void runInterface(int *entriesBuffer){
 
                     createEntriesBuffer(entriesBuffer, inputBuffer, cell_max_visible_digits*n*m,cell_max_visible_digits);
                     
+                    tb_clear();
                     tb_shutdown();
-
+                    return;
 
                     /*
                     for(int i=0; i<n*m; i++){
@@ -286,7 +289,7 @@ void runInterface(int *entriesBuffer){
 
                 }
                 
-                d_printCharBuffer(inputBuffer, 40, 9);
+                d_printCharBuffer(inputBuffer, DEBUG_XPOS_WINDOWS, 9);
                 tb_present();
 
                 break;
