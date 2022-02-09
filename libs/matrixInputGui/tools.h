@@ -9,5 +9,6 @@ void printf_tb(int , int , uint16_t , uint16_t , const char *, ...);
 void fillCharBuffer(char *, int , char);
 void d_printCharBuffer(char *, int , int );
 void d_printIntBuffer(int *, int,int,int);
+int check_and_insert_digit(uint32_t, char*, int*);
 
 #endif 

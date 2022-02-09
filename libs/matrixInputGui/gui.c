@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../termbox/termbox.h"
-#include "../../src/matrixUtils.h"
 #include "tools.h"
 
 #define SEPARATOR_CHAR 'X'
@@ -87,7 +86,7 @@ void createEntriesBuffer(int entriesBuffer[], char inputBuffer[], int lenInput, 
             entriesBuffer[k] = atoi(currNumberString);
             
             // Reset temporary char buffer of the current string
-            fillCharBuffer(currNumberString, cell_max_visible_digits, '/0');
+            fillCharBuffer(currNumberString, cell_max_visible_digits, '\0');
             j=0;
 
             k++;
@@ -103,11 +102,21 @@ void createEntriesBuffer(int entriesBuffer[], char inputBuffer[], int lenInput, 
 
 }
 
-void runInterface(){
+void runInterface(int *entriesBuffer){
     
-    struct tb_event ev;
     struct cursor cpos;
 
+    // TERMBOX INIT -----------------------------------
+    struct tb_event ev;
+    int ret;
+    ret = tb_init();
+	if (ret) {
+		fprintf(stderr, "tb_init() failed with error code %d\n", ret);
+		return;
+	}
+	tb_select_output_mode(TB_OUTPUT_NORMAL);
+    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
+    // ------------------------------------------------
 
 // MATRIX PROPS ----------------
     
@@ -137,8 +146,6 @@ void runInterface(){
     // Full string of digits inserted
     char inputBuffer[cell_max_visible_digits*n*m];
 
-    // Actual final decimal entries
-    int entriesBuffer[n*m];
 // -------------------------------
 
     // TODO: Draw matrix body
@@ -248,16 +255,14 @@ void runInterface(){
 
                     createEntriesBuffer(entriesBuffer, inputBuffer, cell_max_visible_digits*n*m,cell_max_visible_digits);
                     
-                    d_printIntBuffer(entriesBuffer, n*m, 40, 11);
-                    tb_present();
-
-                    
-
                     tb_shutdown();
+
+
+                    /*
                     for(int i=0; i<n*m; i++){
                         printf("%d\n", entriesBuffer[i]);
                     }
-
+                    */
 
                     //------------------------------
                 }
@@ -289,21 +294,3 @@ void runInterface(){
     }    
 }
 
-int main(){
-	
-    // TERMBOX INIT -----------------------------------
-    struct tb_event ev;
-    int ret;
-    ret = tb_init();
-	if (ret) {
-		fprintf(stderr, "tb_init() failed with error code %d\n", ret);
-		return 1;
-	}
-	tb_select_output_mode(TB_OUTPUT_NORMAL);
-    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
-    // ------------------------------------------------
-
-    runInterface();
-
-    return 0;
-}
