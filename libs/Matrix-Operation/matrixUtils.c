@@ -100,6 +100,24 @@ matrix_t* user_insert_populate(matrix_t* mat){
     return mat;
 }
 
+// Populate matrix with floats from a 2D integers buffer  
+matrix_t* user_populate_from_buffer(matrix_t* mat, int *buffer){
+    int i;
+    int j;
+    int k;
+    int rows, cols;
+    rows = mat->rows;
+    cols = mat->cols;
+
+    
+    for(i = 0; i < rows; i++){
+        for(j = 0; j < cols; j++){
+            mat->m[i][j] = (float)buffer[k];
+            k++;
+        }
+    }
+    return mat;
+}
 matrix_t* auto_populate(matrix_t* mat, int max){
     srand(time(NULL));
     int i;
