@@ -109,7 +109,7 @@ matrix_t* user_populate_from_buffer(matrix_t* mat, int *buffer){
     rows = mat->rows;
     cols = mat->cols;
 
-    
+    k = 0;
     for(i = 0; i < rows; i++){
         for(j = 0; j < cols; j++){
             mat->m[i][j] = (float)buffer[k];
